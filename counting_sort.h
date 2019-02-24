@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <iterator>
 
-namespace linear_sort {
+namespace linear_sort::counting_sort {
 
 template <typename T>
 struct key {
@@ -19,8 +19,7 @@ struct key<std::pair<T, U>> {
 template <typename ForwardIt, typename RandomIt,
           typename KeyFunction =
               key<typename std::iterator_traits<ForwardIt>::value_type>>
-void counting_sort(ForwardIt first, ForwardIt last, RandomIt out,
-                   KeyFunction key = {}) {
+void sort(ForwardIt first, ForwardIt last, RandomIt out, KeyFunction key = {}) {
   auto it = first;
   auto min = key(*it);
   auto max = key(*it);
@@ -47,6 +46,6 @@ void counting_sort(ForwardIt first, ForwardIt last, RandomIt out,
     out[counts[key(*it) - offset]++] = *it;
 }
 
-}  // namespace linear_sort
+}  // namespace linear_sort::counting_sort
 
 #endif  // LINEAR_SORTING_COUNTING_SORT_H_

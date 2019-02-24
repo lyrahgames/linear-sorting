@@ -29,11 +29,11 @@ TEST_CASE("Counting Sort for Integers") {
   decltype(in) out(size(in));
 
   auto test = in;
-  sort(begin(test), end(test));
+  std::sort(begin(test), end(test));
   cout << in << endl << test << endl;
   CHECK(is_sorted(begin(test), end(test)));
 
-  counting_sort(begin(in), end(in), begin(out));
+  counting_sort::sort(begin(in), end(in), begin(out));
   cout << out << endl;
   CHECK(out == test);
 }
@@ -43,12 +43,13 @@ TEST_CASE("Counting Sort for Values with Integer Keys") {
   decltype(in) out(size(in));
 
   auto test = in;
-  sort(begin(test), end(test));
+  std::sort(begin(test), end(test));
   cout << in << endl << test << endl;
   CHECK(is_sorted(begin(test), end(test)));
 
-  // counting_sort(begin(in), end(in), begin(out));
-  counting_sort(begin(in), end(in), begin(out), [](auto x) { return x.first; });
+  // counting_sort::sort(begin(in), end(in), begin(out));
+  counting_sort::sort(begin(in), end(in), begin(out),
+                      [](auto x) { return x.first; });
   cout << out << endl;
   CHECK(out == test);
 }
