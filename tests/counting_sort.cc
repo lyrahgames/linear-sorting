@@ -47,9 +47,16 @@ TEST_CASE("Counting Sort for Values with Integer Keys") {
   cout << in << endl << test << endl;
   CHECK(is_sorted(begin(test), end(test)));
 
-  // counting_sort::sort(begin(in), end(in), begin(out));
-  counting_sort::sort(begin(in), end(in), begin(out),
-                      [](auto x) { return x.first; });
-  cout << out << endl;
-  CHECK(out == test);
+  SUBCASE("Sorting with default key implementation") {
+    counting_sort::sort(begin(in), end(in), begin(out));
+    cout << out << endl;
+    CHECK(out == test);
+  }
+
+  SUBCASE("Sorting with custom key function given by lambda expression") {
+    counting_sort::sort(begin(in), end(in), begin(out),
+                        [](auto x) { return x.first; });
+    cout << out << endl;
+    CHECK(out == test);
+  }
 }
