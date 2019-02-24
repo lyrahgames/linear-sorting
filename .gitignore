@@ -1,4 +1,6 @@
 *
+!tests
+
 !*.cc
 !*.h
 !CMakeLists.txt

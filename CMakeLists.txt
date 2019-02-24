@@ -2,21 +2,18 @@ cmake_minimum_required(VERSION 3.10)
 project(linear-sorting VERSION 0.1.0 LANGUAGES CXX)
 enable_testing()
 
-find_package(doctest REQUIRED)
+add_library(linear_sort INTERFACE)
 
-add_executable(main-test
-  doctest_main.cc
-  counting_sort.cc
-)
-
-target_link_libraries(main-test
-  PRIVATE
-    doctest::doctest
-)
-
-target_compile_features(main-test
-  PRIVATE
+target_compile_features(linear_sort
+  INTERFACE
     cxx_std_17
 )
 
-add_test(main-test main-test)
+target_include_directories(linear_sort
+  INTERFACE
+    .
+)
+
+add_library(linear_sort::linear_sort ALIAS linear_sort)
+
+add_subdirectory(tests)
