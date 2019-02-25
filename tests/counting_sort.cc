@@ -60,3 +60,28 @@ TEST_CASE("Counting Sort for Values with Integer Keys") {
     CHECK(out == test);
   }
 }
+
+SCENARIO(
+    "Counting sort can be called with template arguments for minimal and "
+    "maximal values.") {
+  GIVEN("a sequence of integers") {
+    vector<int> in{1, 9, 2, 8, 3, 7, 4, 6, 5};
+    decltype(in) out(size(in));
+    auto test = in;
+    std::sort(begin(test), end(test));
+    cout << in << endl << test << endl;
+
+    WHEN(
+        "the template arguments are describing correct minimal and maximal "
+        "values") {
+      counting_sort::sort<1, 9>(begin(in), end(in), begin(out));
+
+      THEN(
+          "the sequence will be sorted without computing minimal and maximal "
+          "values") {
+        cout << out << endl;
+        CHECK(out == test);
+      }
+    }
+  }
+}

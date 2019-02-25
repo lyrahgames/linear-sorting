@@ -46,6 +46,28 @@ void sort(ForwardIt first, ForwardIt last, RandomIt out, KeyFunction key = {}) {
     out[counts[key(*it) - offset]++] = *it;
 }
 
+template <int Min, int Max, typename ForwardIt, typename RandomIt,
+          typename KeyFunction =
+              key<typename std::iterator_traits<ForwardIt>::value_type>>
+void sort(ForwardIt first, ForwardIt last, RandomIt out, KeyFunction key = {}) {
+  constexpr auto offset = Min;
+  constexpr auto size = Max - Min + 1;
+
+  int counts[size]{};  // this int is an independent implementation detail
+  for (auto it = first; it != last; ++it) ++counts[key(*it) - offset];
+
+  auto sum = counts[0];
+  counts[0] = 0;
+  for (int i = 1; i < static_cast<int>(size); ++i) {
+    auto tmp = sum;
+    sum += counts[i];
+    counts[i] = tmp;
+  }
+
+  for (auto it = first; it != last; ++it)
+    out[counts[key(*it) - offset]++] = *it;
+}
+
 }  // namespace linear_sort::counting_sort
 
 #endif  // LINEAR_SORTING_COUNTING_SORT_H_
