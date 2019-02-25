@@ -85,3 +85,45 @@ SCENARIO(
     }
   }
 }
+
+SCENARIO("Counting sort can be called with hints for minimum and maximum.") {
+  GIVEN("a sequence of integers") {
+    vector<int> in{1, 0, 0, 2, 1, 1, 2, 2, 0, 0, 0, 1};
+    decltype(in) out(size(in));
+    auto test = in;
+    std::sort(begin(test), end(test));
+    cout << in << endl << test << endl;
+
+    WHEN(
+        "hints for minimum and maximum are correct and called without key "
+        "function") {
+      counting_sort::sort(begin(in), end(in), begin(out), 0, 2);
+
+      THEN(
+          "the default key function is used and minimum and maximum are not "
+          "computed") {
+        cout << out << endl;
+        CHECK(out == test);
+      }
+    }
+  }
+
+  GIVEN("a sequence of integer pairs") {
+    vector<pair<int, int>> in{{0, 5}, {1, 4}, {2, 3}, {3, 2}, {4, 1}, {5, 0}};
+    decltype(in) out(size(in));
+    auto test = in;
+    std::sort(begin(test), end(test),
+              [](auto x, auto y) { return x.second <= y.second; });
+    cout << in << endl << test << endl;
+
+    WHEN("") {
+      counting_sort::sort(begin(in), end(in), begin(out),
+                          [](auto x) { return x.second; }, 0, 5);
+
+      THEN("") {
+        cout << out << endl;
+        CHECK(out == test);
+      }
+    }
+  }
+}
