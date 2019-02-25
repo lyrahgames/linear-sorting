@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <iterator>
 
-namespace linear_sort::counting_sort {
+namespace linear_sort {
 
 template <typename T>
 struct key {
@@ -15,6 +15,8 @@ template <typename T, typename U>
 struct key<std::pair<T, U>> {
   int operator()(const std::pair<T, U>& x) const noexcept { return x.first; }
 };
+
+namespace counting_sort {
 
 template <typename ForwardIt, typename RandomIt,
           typename KeyFunction =
@@ -87,6 +89,46 @@ void sort(ForwardIt first, ForwardIt last, RandomIt out, KeyFunction key = {}) {
     out[counts[key(*it) - offset]++] = *it;
 }
 
-}  // namespace linear_sort::counting_sort
+}  // namespace counting_sort
+
+namespace cycle_sort {
+
+template <typename RandomIt,
+          typename KeyFunction =
+              key<typename std::iterator_traits<RandomIt>::value_type>>
+void sort(RandomIt first, RandomIt last, KeyFunction key = {}) {
+  auto it = first;
+  auto min = key(*it);
+  auto max = key(*it);
+  for (; it != last; ++it) {
+    max = std::max(max, key(*it));
+    min = std::min(min, key(*it));
+  }
+
+  const auto offset = min;
+  const auto size = max - min + 1;
+
+  int counts[size]{};  // this int is an independent implementation detail
+  for (auto it = first; it != last; ++it) ++counts[key(*it) - offset];
+
+  for (int i = 1; i < static_cast<int>(size); ++i) counts[i] += counts[i - 1];
+
+  const auto length = last - first;
+  for (typename std::iterator_traits<RandomIt>::difference_type i = 0;
+       i < length; ++i) {
+    auto position = --counts[key(first[i]) - offset];
+    if (position <= i) continue;
+    auto value = first[i];
+    do {
+      std::swap(value, first[position]);
+      position = --counts[key(value) - offset];
+    } while (position > i);
+    first[i] = value;
+  }
+}
+
+}  // namespace cycle_sort
+
+}  // namespace linear_sort
 
 #endif  // LINEAR_SORTING_COUNTING_SORT_H_

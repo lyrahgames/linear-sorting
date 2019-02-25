@@ -127,3 +127,43 @@ SCENARIO("Counting sort can be called with hints for minimum and maximum.") {
     }
   }
 }
+
+SCENARIO("Counting sort can be used as an in place sorting algorithm.") {
+  GIVEN("a sequence of integers") {
+    vector<int> data{1, 0, 0, 2, 1, 1, 2, 2, 0, 0, 0, 1};
+    auto test = data;
+    std::sort(begin(test), end(test));
+    cout << data << endl << test << endl;
+
+    WHEN("counting sort is called without output vector or key function") {
+      cycle_sort::sort(begin(data), end(data));
+
+      THEN(
+          "the given sequence will be sorted in place with the default key "
+          "function") {
+        cout << data << endl;
+        CHECK(data == test);
+      }
+    }
+  }
+
+  GIVEN("a sequence of pairs of integers") {
+    vector<pair<int, int>> data{{1, 3}, {3, 2}, {1, 1}, {3, 4}, {2, 5}, {0, 6}};
+    auto test = data;
+    std::sort(begin(test), end(test));
+    cout << data << endl << test << endl;
+
+    WHEN("counting sort is called without output vector or key function") {
+      cycle_sort::sort(begin(data), end(data));
+
+      THEN(
+          "the given sequence will be unstable sorted in place with the "
+          "default key function") {
+        cout << data << endl;
+        for (auto i = 0; i < size(data); ++i) {
+          CHECK(data[i].first == test[i].first);
+        }
+      }
+    }
+  }
+}
